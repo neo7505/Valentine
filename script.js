@@ -1,89 +1,94 @@
-document.addEventListener('DOMContentLoaded', () => {
-    let currentCard = 1;
-    const totalCards = 9;
+// ================================
+// Proposal Website Script
+// Works with Vite + Vercel
+// ================================
 
-    // EmailJS Configuration
-    // REPLACE THESE WITH YOUR ACTUAL KEYS IF NOT ALREADY DONE IN HTML OR HERE
-    const SERVICE_ID = "service_3nskfn7";
-    const TEMPLATE_ID = "template_r8uhvgh"; // Need to replace
-    // Public Key is initialized in HTML head
+// State
+let currentCard = 1;
+const totalCards = 9;
 
-    // Navigation Function
-    function showCard(cardIndex) {
-        // Hide all cards by removing active/prev classes
-        // But to keep the "stack" feel, we might want to keep previous ones "prev"
-        
-        // Reset state
-        document.querySelectorAll('.card').forEach(card => {
-            card.classList.remove('active');
-            card.classList.remove('prev');
-        });
+// EmailJS Config
+const SERVICE_ID = "service_3nskfn7";
+const TEMPLATE_ID = "template_r8uhvgh";
 
-        // Loop through all previous cards to set them to "exit" state
-        for (let i = 1; i < cardIndex; i++) {
-            const prevCard = document.getElementById(`card-${i}`);
-            if (prevCard) prevCard.classList.add('prev');
-        }
+// --------------------
+// Card Navigation
+// --------------------
+function showCard(cardIndex) {
+    document.querySelectorAll('.card').forEach(card => {
+        card.classList.remove('active');
+        card.classList.remove('prev');
+    });
 
-        // Activate current card
-        const activeCard = document.getElementById(`card-${cardIndex}`);
-        if (activeCard) {
-            activeCard.classList.add('active');
-        }
-        
-        currentCard = cardIndex;
+    for (let i = 1; i < cardIndex; i++) {
+        const prev = document.getElementById(`card-${i}`);
+        if (prev) prev.classList.add('prev');
     }
 
-    // Attach Click Handlers to "Next" buttons
-    document.querySelectorAll('[data-next-card]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const nextIndex = parseInt(e.target.getAttribute('data-next-card'));
-            showCard(nextIndex);
+    const active = document.getElementById(`card-${cardIndex}`);
+    if (active) active.classList.add('active');
+
+    currentCard = cardIndex;
+}
+
+// --------------------
+// Attach Events AFTER DOM Ready
+// --------------------
+function initProposalSite() {
+
+    // NEXT buttons
+    document.querySelectorAll('[data-next-card]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const next = parseInt(btn.dataset.nextCard);
+            showCard(next);
         });
     });
 
-    // YES Button Handler
+    // YES button
     const yesBtn = document.getElementById('yes-btn');
     if (yesBtn) {
         yesBtn.addEventListener('click', () => {
-            // Confetti
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#e88d8d', '#ffffff', '#ffeb3b']
-            });
-            // Go to final card (9)
+            if (window.confetti) {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#e88d8d', '#ffffff', '#ffeb3b']
+                });
+            }
             showCard(9);
         });
     }
 
-    // NO Button Handler
+    // NO button (runaway 😄)
     const noBtn = document.getElementById('no-btn');
-    function moveNoButton() {
-        const x = Math.random() * 200 - 100;
-        const y = Math.random() * 200 - 100;
-        noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    }
-
     if (noBtn) {
+        const moveNoButton = () => {
+            const x = Math.random() * 200 - 100;
+            const y = Math.random() * 200 - 100;
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
+        };
+
         noBtn.addEventListener('mouseover', moveNoButton);
-        noBtn.addEventListener('click', (e) => {
+        noBtn.addEventListener('click', e => {
             e.preventDefault();
             moveNoButton();
         });
-        noBtn.addEventListener('touchstart', (e) => {
+        noBtn.addEventListener('touchstart', e => {
             e.preventDefault();
             moveNoButton();
         });
     }
 
-    // Email Form Handler
+    // --------------------
+    // Email Form
+    // --------------------
     const form = document.getElementById('message-form');
     if (form) {
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const btn = event.target.querySelector('button');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const btn = form.querySelector('button');
             const msgBox = document.getElementById('feedback-msg');
             const message = document.getElementById('message').value;
 
@@ -91,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             const params = {
-                from_name: "Shraddha", 
+                from_name: "Shraddha",
                 message: message,
                 reply_to: "Shraddha"
             };
@@ -101,9 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.innerText = "Sent! ❤️";
                     msgBox.innerText = "Message sent successfully!";
                     msgBox.style.color = "green";
-                    document.getElementById('message').value = "";
-                }, (error) => {
-                    console.error('FAILED...', error);
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error(error);
                     btn.innerText = "Try Again";
                     btn.disabled = false;
                     msgBox.innerText = "Failed to send. But I love you anyway!";
@@ -111,9 +117,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+}
 
-    // Confetti Script Injection
-    const confettiScript = document.createElement('script');
-    confettiScript.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js";
-    document.body.appendChild(confettiScript);
-});
+// --------------------
+// Confetti Script Load
+// --------------------
+const confettiScript = document.createElement('script');
+confettiScript.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js";
+document.body.appendChild(confettiScript);
+
+// --------------------
+// Init safely for Vite
+// --------------------
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProposalSite);
+} else {
+    initProposalSite();
+}
