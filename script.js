@@ -96,6 +96,13 @@ function sendEmail(event) {
         });
 }
 
+// Make functions globally available for HTML onclick attributes
+window.showCard = showCard;
+window.nextCard = nextCard;
+window.handleYes = handleYes;
+window.moveNoButton = moveNoButton;
+window.sendEmail = sendEmail;
+
 // Import Confetti (using a simple CDN-less implementation or relying on external script)
 // Adding external script for confetti dynamically
 const confettiScript = document.createElement('script');
