@@ -212,18 +212,49 @@ textarea:focus {
     .card-container {
         width: 95%;
         height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
     }
     
     .card {
-        border-radius: 0;
-        height: 100vh;
+        padding: 20px;
     }
 
     h1 {
-        font-size: 2.8rem;
+        font-size: 2.2rem;
     }
     
     h2 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .tenor-gif-embed {
+        max-width: 120px !important;
+    }
+
+    /* Buttons Mobile Fix */
+    .buttons {
+        flex-direction: row; /* Keep side-by-side */
+        gap: 15px;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap; /* Wrap if absolutely necessary */
+    }
+
+    .btn {
+        width: auto; /* Natural width */
+        min-width: 100px;
+        padding: 10px 20px;
+        font-size: 0.95rem; /* Slightly smaller text */
+        margin-top: 0; /* Remove potential margin causing spacing issues */
+    }
+
+    .yes-btn {
+        padding: 10px 25px; /* Slightly larger yes button */
+        font-size: 1rem;
     }
 }
