@@ -9,7 +9,7 @@ const totalCards = 9;
 
 // EmailJS Config
 const SERVICE_ID = "service_3nskfn7";
-const TEMPLATE_ID = "template_r8uhvgh";
+const TEMPLATE_ID = "template_relfig9";
 
 // --------------------
 // Card Navigation
