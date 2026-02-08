@@ -117,6 +117,35 @@ function initProposalSite() {
                 });
         });
     }
+
+    // --- Floating Hearts Generator ---
+    function createFloatingHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('floating-heart');
+        heart.innerText = Math.random() > 0.6 ? '❤️' : (Math.random() > 0.5 ? '✨' : '🌸'); 
+        
+        // Use percentage for horizontal position relative to container
+        heart.style.left = Math.random() * 100 + '%';
+        
+        // Random Size (keep rem for consistency)
+        const size = Math.random() * 1.5 + 0.5;
+        heart.style.fontSize = size + 'rem';
+        
+        const duration = Math.random() * 5 + 10;
+        heart.style.animationDuration = duration + 's';
+        
+        const cardContainer = document.querySelector('.card-container');
+        if (cardContainer) {
+            cardContainer.appendChild(heart);
+        }
+
+        setTimeout(() => {
+            heart.remove();
+        }, duration * 1000);
+    }
+
+    // Spawn hearts every 800ms
+    setInterval(createFloatingHeart, 800);
 }
 
 // --------------------
